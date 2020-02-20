@@ -27,5 +27,5 @@ jobs:
       # file: code-repo/tasks/build-image.yml
       - put: spring-boot-rest-example-image
         params:
-          tag_file: .git/short_ref
+          tag_file: code-repo/.git/short_ref
           build: code-repo/Dockerfile
