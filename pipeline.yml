@@ -1,0 +1,31 @@
+resources:
+  # This resource is the repository that contains the application source code 
+  # and configuration of the pipeline tasks.
+  - name: code-repo
+    type: git
+    source:
+      branch: master
+      uri: https://github.com/alexbrand/spring-boot-rest-example.git
+
+  # This resource is the container image that is pushed to a remote registry.
+  - name: spring-boot-rest-example-image
+    type: docker-image
+    source:
+      repository: ((docker-hub-account))/spring-boot-rest-example
+      username: ((docker-hub-user))
+      password: ((docker-hub-pass))
+
+jobs:
+  - name: build-push-image
+    plan:
+    - get: code-repo
+      trigger: true
+    - do:
+      #- task: unit-test
+      #  file: code-repo/tasks/unit-test.yml
+      #      - task: build-image
+      # file: code-repo/tasks/build-image.yml
+      - put: spring-boot-rest-example-image
+        params:
+          tag_file: .git/short_ref
+          build: code-repo/Dockerfile
