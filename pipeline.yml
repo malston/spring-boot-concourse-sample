@@ -20,12 +20,7 @@ jobs:
     plan:
     - get: code-repo
       trigger: true
-    - do:
-      #- task: unit-test
-      #  file: code-repo/tasks/unit-test.yml
-      #      - task: build-image
-      # file: code-repo/tasks/build-image.yml
-      - put: spring-boot-rest-example-image
-        params:
-          tag_file: code-repo/.git/short_ref
-          build: code-repo/Dockerfile
+    - put: spring-boot-rest-example-image
+      params:
+        tag_file: code-repo/.git/short_ref
+        build: code-repo
