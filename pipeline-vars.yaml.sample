@@ -1,0 +1,11 @@
+---
+docker-hub-account: ""
+docker-hub-user: ""
+docker-hub-pass: ""
+kubernetes-api-endpoint: https://my-cluster.example.com:6443
+kubernetes-api-service-account-token: ""
+kubernetes-api-certificate-authority: |
+  -----BEGIN CERTIFICATE-----
+  <-- Certificate Here -->
+  -----END CERTIFICATE-----
+
