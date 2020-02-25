@@ -45,7 +45,6 @@ jobs:
             repository: alexbrand/oci-build-task
         inputs:
         - name: code-repo
-          path: .
         outputs:
         - name: image
         run:
@@ -64,6 +63,23 @@ jobs:
     - get: code-repo
       passed: ["build-push-image"]
       trigger: true
+    - task: set image version
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: busybox
+            tag: '1.31'
+        inputs:
+        - name: code-repo
+        outputs:
+        - name: versioned-manifests
+        run:
+          path: ash
+          args:
+          - "-c"
+          - 'sed -i "s/((IMAGE_TAG))/$(cat code-repo/.git/short_ref)/g" code-repo/deploy/deployment.yaml > versioned-manifests'
     - put: kubernetes-cluster
       params:
-        kubectl: apply -f code-repo/deploy/
+        kubectl: apply -f versioned-manifests/

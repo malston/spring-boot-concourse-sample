@@ -1,24 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
-    app: nginx
-  name: nginx
+    app: spring-boot-rest-example
+  name: spring-boot-rest-example
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx
-  strategy: {}
+      app: spring-boot-rest-example
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: nginx
+        app: spring-boot-rest-example
     spec:
       containers:
-      - image: nginx
-        name: nginx
-        resources: {}
-status: {}
+      - image: "alexbrand/spring-boot-rest-example:((IMAGE_TAG))"
+        name: spring-boot-rest-example
