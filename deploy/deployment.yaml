@@ -15,5 +15,5 @@ spec:
         app: spring-boot-rest-example
     spec:
       containers:
-      - image: "alexbrand/spring-boot-rest-example:((IMAGE_TAG))"
+      - image: "alexbrand/spring-boot-rest-example:${IMAGE_TAG}"
         name: spring-boot-rest-example
