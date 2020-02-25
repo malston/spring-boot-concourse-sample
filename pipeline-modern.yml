@@ -45,6 +45,7 @@ jobs:
             repository: alexbrand/oci-build-task
         inputs:
         - name: code-repo
+          path: .
         outputs:
         - name: image
         run:
@@ -79,7 +80,7 @@ jobs:
           path: ash
           args:
           - "-c"
-          - 'sed -i "s/${IMAGE_TAG}/$(cat code-repo/.git/short_ref)/g" code-repo/deploy/deployment.yaml > versioned-manifests/deployment.yaml'
+          - 'sed -i "s/__IMAGE_TAG__/$(cat code-repo/.git/short_ref)/g" code-repo/deploy/deployment.yaml > versioned-manifests/deployment.yaml'
     - put: kubernetes-cluster
       params:
         kubectl: apply -f versioned-manifests/
