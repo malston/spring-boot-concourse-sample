@@ -1,3 +1,10 @@
+resource_types:
+  - name: kubernetes
+    type: docker-image
+    source:
+      repository: zlabjp/kubernetes-resource
+      tag: "1.17"
+
 resources:
   # This resource is the repository that contains the application source code 
   # and configuration of the pipeline tasks.
@@ -15,6 +22,13 @@ resources:
       username: ((docker-hub-user))
       password: ((docker-hub-pass))
 
+  - name: kubernetes-cluster
+    type: kubernetes
+    source:
+      server: ((kubernetes-api-endpoint))
+      token: ((kubernetes-api-service-account-token))
+      certificate_authority: ((kubernetes-api-certificate-authority))
+
 jobs:
   - name: build-push-image
     plan:
@@ -28,7 +42,7 @@ jobs:
         image_resource:
           type: registry-image
           source:
-            repository: vito/oci-build-task
+            repository: alexbrand/oci-build-task
         inputs:
         - name: code-repo
           path: .
@@ -42,3 +56,14 @@ jobs:
         additional_tags: code-repo/.git/short_ref
         image: image/image.tar
 
+  - name: deploy-kubernetes
+    plan:
+    - get: container-image
+      passed: ["build-push-image"]
+      trigger: true
+    - get: code-repo
+      passed: ["build-push-image"]
+      trigger: true
+    - put: kubernetes-cluster
+      params:
+        kubectl: apply -f code-repo/deploy/
