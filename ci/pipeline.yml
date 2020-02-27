@@ -26,8 +26,8 @@ resources:
     type: kubernetes
     source:
       server: ((kubernetes-api-endpoint))
-      token: ((kubernetes-api-service-account-token))
-      certificate_authority: ((kubernetes-api-certificate-authority))
+      token: ((kubernetes-service-account-token))
+      certificate_authority: ((kubernetes-certificate-authority))
 
 jobs:
   - name: build-push-image
@@ -37,19 +37,7 @@ jobs:
 
     - task: build
       privileged: true
-      config:
-        platform: linux
-        image_resource:
-          type: registry-image
-          source:
-            repository: alexbrand/oci-build-task
-        inputs:
-        - name: code-repo
-          path: .
-        outputs:
-        - name: image
-        run:
-          path: build
+      file: code-repo/ci/tasks/build-container.yml
 
     - put: container-image
       params:
@@ -65,22 +53,7 @@ jobs:
       passed: ["build-push-image"]
       trigger: true
     - task: set image version
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: busybox
-            tag: '1.31'
-        inputs:
-        - name: code-repo
-        outputs:
-        - name: versioned-manifests
-        run:
-          path: ash
-          args:
-          - "-c"
-          - 'sed "s/__IMAGE_TAG__/$(cat code-repo/.git/short_ref)/g" code-repo/deploy/deployment.yaml > versioned-manifests/deployment.yaml'
+      file: code-repo/ci/tasks/set-image-tag.yml
     - put: kubernetes-cluster
       params:
         kubectl: apply -f versioned-manifests/
