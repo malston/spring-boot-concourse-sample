@@ -1,0 +1,4 @@
+#!/bin/ash
+
+GIT_SHA_SHORT_REF=$(cat code-repo/.git/short_ref)
+sed "s/__IMAGE_TAG__/${GIT_SHA_SHORT_REF}/g" code-repo/deploy/deployment.yaml > rendered-manifests/deployment.yaml

@@ -1,3 +1,5 @@
+# Enables the kubernetes resource, which is a third-party resource available
+# at https://github.com/zlabjp/kubernetes-resource
 resource_types:
   - name: kubernetes
     type: docker-image
@@ -6,7 +8,7 @@ resource_types:
       tag: "1.17"
 
 resources:
-  # This resource is the repository that contains the application source code 
+  # This resource is the repository that contains the application source code
   # and configuration of the pipeline tasks.
   - name: code-repo
     type: git
@@ -22,6 +24,7 @@ resources:
       username: ((docker-hub-user))
       password: ((docker-hub-pass))
 
+  # This resource is the target Kubernetes cluster for deployment.
   - name: kubernetes-cluster
     type: kubernetes
     source:
@@ -30,20 +33,22 @@ resources:
       certificate_authority: ((kubernetes-certificate-authority))
 
 jobs:
+    # This job checks out the code repo, builds the container image, and pushes
+    # the image to a remote registry.
   - name: build-push-image
     plan:
     - get: code-repo
       trigger: true
-
-    - task: build
+    - task: build-container
       privileged: true
       file: code-repo/ci/tasks/build-container.yml
-
     - put: container-image
       params:
         additional_tags: code-repo/.git/short_ref
         image: image/image.tar
 
+    # This job renders the deployment manifests and applies them against the
+    # target Kubernetes cluster.
   - name: deploy-kubernetes
     plan:
     - get: container-image
@@ -52,8 +57,8 @@ jobs:
     - get: code-repo
       passed: ["build-push-image"]
       trigger: true
-    - task: set image version
-      file: code-repo/ci/tasks/set-image-tag.yml
+    - task: render-manifests
+      file: code-repo/ci/tasks/render-manifests.yml
     - put: kubernetes-cluster
       params:
-        kubectl: apply -f versioned-manifests/
+        kubectl: apply -f rendered-manifests/
