@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: spring-boot-rest-example
-  name: spring-boot-rest-example
+    app: spring-boot-concourse-example
+  name: spring-boot-concourse-example
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: spring-boot-rest-example
+      app: spring-boot-concourse-example
   template:
     metadata:
       labels:
-        app: spring-boot-rest-example
+        app: spring-boot-concourse-example
     spec:
       containers:
-      - image: "alexbrand/spring-boot-rest-example:__IMAGE_TAG__"
-        name: spring-boot-rest-example
+      - image: "alexbrand/spring-boot-concourse-example:__IMAGE_TAG__"
+        name: spring-boot-concourse-example

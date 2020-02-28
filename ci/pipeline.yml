@@ -14,13 +14,13 @@ resources:
     type: git
     source:
       branch: master
-      uri: https://github.com/alexbrand/spring-boot-rest-example.git
+      uri: https://github.com/alexbrand/spring-boot-concourse-sample.git
 
   # This resource is the container image that is pushed to a remote registry.
   - name: container-image
     type: registry-image
     source:
-      repository: ((docker-hub-account))/spring-boot-rest-example
+      repository: ((docker-hub-account))/spring-boot-concourse-sample
       username: ((docker-hub-user))
       password: ((docker-hub-pass))
 
