@@ -8,4 +8,4 @@ kubernetes-certificate-authority: |
   -----BEGIN CERTIFICATE-----
   <-- Certificate Here -->
   -----END CERTIFICATE-----
-
+kubernetes-namespace: ""
