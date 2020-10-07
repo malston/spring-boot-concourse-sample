@@ -15,5 +15,5 @@ spec:
         app: spring-boot-concourse-sample
     spec:
       containers:
-      - image: "alexbrand/spring-boot-concourse-sample:__IMAGE_TAG__"
+      - image: "malston/spring-boot-concourse-sample:__IMAGE_TAG__"
         name: spring-boot-concourse-sample
