@@ -14,7 +14,7 @@ resources:
     type: git
     source:
       branch: master
-      uri: https://github.com/alexbrand/spring-boot-concourse-sample.git
+      uri: https://github.com/malston/spring-boot-concourse-sample.git
 
   # This resource is the container image that is pushed to a remote registry.
   - name: container-image
